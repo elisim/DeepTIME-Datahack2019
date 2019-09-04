@@ -3,6 +3,7 @@ import sys
 import tarfile
 import numpy as np
 
+
 FSENCODING = sys.getfilesystemencoding()
 
 
@@ -41,3 +42,9 @@ def parse_tarinfo(buff):
     else:
         # Python 2
         return tarfile.TarInfo.frombuf(buff)
+
+    
+def show_numpy_image(img):
+    from matplotlib import pyplot as plt
+    plt.imshow(img, interpolation='nearest')
+    plt.show()
