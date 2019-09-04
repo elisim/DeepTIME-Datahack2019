@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 data/
 real_data/
+test_data/
