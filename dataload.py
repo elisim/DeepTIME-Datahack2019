@@ -11,7 +11,7 @@ REAL_DIR = 'real_data/'
 IMAGES_FILE = 'images.tar'
 POSE_FILE = 'pose.pkl'
 SIGNATURES_FILE = 'signatures.pkl'
-
+NON_LABEL = 255
 
 class OrcamDataset(Dataset):
     def __init__(self, data_dir, train=True, filter_signatures=True):
@@ -38,6 +38,9 @@ class OrcamDataset(Dataset):
 
     @staticmethod
     def get_label(path):
+        if 'person' not in path:
+            #nolabel
+            return NON_LABEL
         slash = path.find('/')
         underscore = path.find('_')
         num_str = path[underscore + 1:slash]
