@@ -60,9 +60,9 @@ def get_pose_dists(pose):
         [x for x in np.array([np.sqrt(sum((kp_1 - kp_2) ** 2, 0)) for kp_1 in pose for kp_2 in pose]) if x != 0])
 
 
-def get_data_loaders(batch_size=16, shuffle=True, num_workers=1):
+def get_data_loaders(train_batch_size=64, test_batch_size=64, shuffle=True, num_workers=1):
     train_dataset = OrcamDataset(REAL_DIR, train=True)
     test_dataset = OrcamDataset(TEST_DIR, train=False)
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
+    train_loader = DataLoader(train_dataset, batch_size=train_batch_size, shuffle=shuffle, num_workers=num_workers)
+    test_loader = DataLoader(test_dataset, batch_size=test_batch_size, shuffle=shuffle, num_workers=num_workers)
     return train_loader, test_loader
