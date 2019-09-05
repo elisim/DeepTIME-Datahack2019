@@ -21,16 +21,20 @@ class OrcamDataset(Dataset):
         sig_file = os.path.join(data_dir, SIGNATURES_FILE)
         self.pose_paths, self.keypoints, self.scores = read_pose(pose_file)
         self.signatures_paths, self.signatures = read_signatures(sig_file)
-        self.signatures = torch.Tensor(self.signatures)
+        self.signatures = torch.FloatTensor(self.signatures)
         self.images = Images(im_file)
         if filter_signatures:
             self.actual_paths = list(set(self.images.paths) & set(self.signatures_paths))
         else:
             raise NotImplementedErrorׂ('Should add pretrained net instead of sig')
             self.actual_paths = self.images.paths
-
+    
     def __len__(self):
         return len(self.actual_paths)
+    
+    @staticmethod
+    def get_pose_dists(pose):
+        return torch.FloatTensor([x for x in np.array([np.sqrt(sum((kp_1 - kp_2) ** 2, 0)) for kp_1 in pose for kp_2 in pose]) if x != 0])
 
     @staticmethod
     def get_label(path):
@@ -48,10 +52,10 @@ class OrcamDataset(Dataset):
         pose_idx = self.pose_paths.index(path)
         pose = self.keypoints[pose_idx]
         image = self.images[path]
-        image = torch.Tensor(image.copy())
+        image = torch.LongTensor(image.copy())
         label = self.get_label(path)
-        pose_dist = get_pose_dists(pose)
-        sample = {'image': image, "signature": signature, "pose": pose_dist, "label": torch.Tensor([label])}
+        pose_dist = self.get_pose_dists(pose)
+        sample = {'image': image, "signature": signature, "pose": pose_dist, "label": torch.LongTensor([label])}
         return sample
 
 
